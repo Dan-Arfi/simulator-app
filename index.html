@@ -161,27 +161,39 @@
       margin-bottom: 2rem;
       text-align: center;
     }
-    .simulator-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem 2rem;
-      margin-bottom: 2rem;
+    .simulator-table {
+      width: 100%;
+      margin-bottom: 1.5rem;
+      border-collapse: separate;
+      border-spacing: 0 0;
     }
-    .simulator-group label {
+    .simulator-label {
+      padding: 0 1rem 0.5rem 0;
+      vertical-align: bottom;
+      width: 50%;
+    }
+    .simulator-label label {
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.5rem;
       display: block;
     }
-    .simulator-group input {
+    .simulator-input {
+      padding: 0 1rem 1.5rem 0;
+      vertical-align: top;
+    }
+    .simulator-input input {
       width: 100%;
       padding: 0.8rem 1rem;
       border-radius: 10px;
       border: 1px solid #e2e8f0;
       background: #fff;
       font-size: 1rem;
-      margin-top: 0.2rem;
       transition: border 0.2s;
+      height: 50px; /* Fixed height for all inputs */
+    }
+    .simulator-input input:focus {
+      border-color: var(--primary);
+      outline: none;
     }
     .simulator-group input:focus {
       border-color: var(--primary);
@@ -319,8 +331,15 @@
       .testimonial-grid { flex-direction: column; gap: 1.2rem; }
     }
     @media (max-width: 600px) {
-      .simulator-grid {
-        grid-template-columns: 1fr;
+      .simulator-table, .simulator-table tbody, .simulator-table tr, .simulator-table td {
+        display: block;
+        width: 100%;
+      }
+      .simulator-label {
+        padding: 0 0 0.5rem 0;
+      }
+      .simulator-input {
+        padding: 0 0 1.5rem 0;
       }
       .simulator-container {
         padding: 1.2rem 0.5rem 1.5rem 0.5rem;
@@ -366,24 +385,24 @@
       <h2 class="simulator-title">Simulateur de rentabilité</h2>
       <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux d'Innovorder peuvent générer pour votre établissement</p>
       <form id="simulatorForm">
-        <div class="simulator-grid">
-          <div class="simulator-group">
-            <label for="restaurants">Nombre de restaurants</label>
-            <input type="number" id="restaurants" min="1" value="1" required />
-          </div>
-          <div class="simulator-group">
-            <label for="tickets">Tickets moyens par jour par restaurant</label>
-            <input type="number" id="tickets" min="1" value="100" required />
-          </div>
-          <div class="simulator-group">
-            <label for="basket">Valeur moyenne du panier (€)</label>
-            <input type="number" id="basket" min="1" value="15" required />
-          </div>
-          <div class="simulator-group">
-            <label for="days">Jours d'ouverture par semaine</label>
-            <input type="number" id="days" min="1" max="7" value="7" required />
-          </div>
-        </div>
+        <table class="simulator-table">
+          <tr>
+            <td class="simulator-label"><label for="restaurants">Nombre de restaurants</label></td>
+            <td class="simulator-label"><label for="tickets">Tickets moyens par jour par restaurant</label></td>
+          </tr>
+          <tr>
+            <td class="simulator-input"><input type="number" id="restaurants" min="1" value="1" required /></td>
+            <td class="simulator-input"><input type="number" id="tickets" min="1" value="100" required /></td>
+          </tr>
+          <tr>
+            <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
+            <td class="simulator-label"><label for="days">Jours d'ouverture par semaine</label></td>
+          </tr>
+          <tr>
+            <td class="simulator-input"><input type="number" id="basket" min="1" value="15" required /></td>
+            <td class="simulator-input"><input type="number" id="days" min="1" max="7" value="7" required /></td>
+          </tr>
+        </table>
         <button type="submit" class="simulator-btn">Calculer votre potentiel de revenus <i class="fas fa-arrow-right"></i></button>
       </form>
       <div class="simulator-results" id="results" style="display:none;">
