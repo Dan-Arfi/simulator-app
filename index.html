@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clyo - Logiciel et caisse enregistreuse pour restaurant</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #3b82f6;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #0ea5e9;
+      --gradient-start: #1e40af;
+      --gradient-end: #3b82f6;
+      --card-bg: #ffffff;
+      --success: #10b981;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    /* Navbar Styles */
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      padding: 0.8rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-logo img {
+      height: 40px;
+      width: auto;
+      display: block;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      color: #fff;
+      padding: 3.5rem 1rem 4.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+      margin-top: 0;
+    }
+    .header-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .header-text {
+      flex: 1;
+      text-align: left;
+      color: #fff;
+    }
+    .header-text h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .header-text .subtitle {
+      font-size: 1.3rem;
+      margin-bottom: 0.7rem;
+      color: #e0e7ef;
+      font-weight: 500;
+    }
+    .header-text .desc {
+      font-size: 1.1rem;
+      margin-bottom: 1.2rem;
+      color: #e0e7ef;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .header-features {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.2rem;
+    }
+    .header-feature {
+      background: rgba(255,255,255,0.13);
+      color: #fff;
+      padding: 0.7rem 1.2rem;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border: 1px solid rgba(255,255,255,0.18);
+      transition: all 0.2s ease;
+    }
+    .header-feature:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .header-feature i {
+      color: #fff;
+      font-size: 1.2rem;
+    }
+    /* Simulator */
+    .simulator-section {
+      background: #fff;
+      padding: 3rem 0 2rem 0;
+    }
+    .simulator-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #f8fafc;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(37,99,235,0.07);
+      padding: 2.5rem 2rem 2rem 2rem;
+      margin-bottom: 3rem;
+    }
+    .simulator-title {
+      color: var(--primary);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .simulator-desc {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .simulator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2rem;
+      margin-bottom: 2rem;
+    }
+    .simulator-group label {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .simulator-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      font-size: 1rem;
+      margin-top: 0.2rem;
+      transition: border 0.2s;
+    }
+    .simulator-group input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+    .simulator-btn {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+    }
+    .simulator-btn:hover {
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+    }
+    .simulator-results {
+      margin-top: 2.5rem;
+      background: #e8f0fe;
+      border-left: 5px solid var(--accent);
+      border-radius: 10px;
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.06);
+    }
+    .simulator-results h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .simulator-results ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .simulator-results li {
+      font-size: 1.08rem;
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+    .simulator-highlight {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .result-detail {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.2rem;
+      margin-left: 0.5rem;
+    }
+    .total-result {
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #cbd5e1;
+    }
+    .total-highlight {
+      color: var(--success);
+      font-size: 1.2rem;
+    }
+    /* Testimonials */
+    .testimonials {
+      max-width: 1100px;
+      margin: 3rem auto 0;
+      padding: 2.5rem 2rem;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(59,130,246,0.08);
+    }
+    .testimonial-header h2 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-weight: 700;
+    }
+    .testimonial-grid {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .testimonial {
+      background: #f1f5fb;
+      border-radius: 14px;
+      padding: 1.5rem 1.2rem;
+      box-shadow: 0 2px 12px rgba(37,99,235,0.06);
+      max-width: 320px;
+      flex: 1 1 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    .testimonial-content {
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+    .testimonial-logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      object-fit: contain;
+      background-color: #333;
+      padding: 8px;
+      margin-bottom: 1.2rem;
+      display: block;
+      align-self: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .testimonial-author {
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .testimonial-company {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+    /* Responsive */
+    @media (max-width: 900px) {
+      .header-content { flex-direction: column; align-items: flex-start; }
+      .testimonials { padding: 1.5rem 0.5rem; }
+      .testimonial-grid { flex-direction: column; gap: 1.2rem; }
+    }
+    @media (max-width: 600px) {
+      .simulator-grid {
+        grid-template-columns: 1fr;
+      }
+      .simulator-container {
+        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">
+        <a href="#">
+          <img src="clyo_logo-23.png" alt="Clyo Logo" />
+        </a>
+      </div>
+      <div class="navbar-right">
+        <!-- Space for future menu items -->
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Logiciel et caisse enregistreuse pour restaurant</h1>
+        <div class="subtitle">
+          La solution de caisse tout en un pour piloter et développer votre restaurant
+        </div>
+        <div class="desc">
+          La caisse enregistreuse qui intègre tout le nécessaire pour développer sa présence en ligne, maximiser sa rentabilité et augmenter la satisfaction de ses clients
+        </div>
+        <div class="header-features">
+          <div class="header-feature"><i class="fas fa-utensils"></i> Pour tout type de restaurants (restaurant, fast food, bar)</div>
+          <div class="header-feature"><i class="fas fa-tablet-alt"></i> Disponible sur caisse, tablette et mobile</div>
+          <a href="https://www.clyosystems.com/telecharger-le-logiciel-de-caisse/" class="header-feature" style="text-decoration: none;"><i class="fas fa-gift"></i> Essai gratuit de 14 jours</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="simulator-section">
+    <div class="simulator-container">
+      <h2 class="simulator-title">Simulateur de rentabilité</h2>
+      <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux d'Innovorder peuvent générer pour votre établissement</p>
+      <form id="simulatorForm">
+        <div class="simulator-grid">
+          <div class="simulator-group">
+            <label for="restaurants">Nombre de restaurants</label>
+            <input type="number" id="restaurants" min="1" value="1" required />
+          </div>
+          <div class="simulator-group">
+            <label for="tickets">Tickets moyens par jour par restaurant</label>
+            <input type="number" id="tickets" min="1" value="100" required />
+          </div>
+          <div class="simulator-group">
+            <label for="basket">Valeur moyenne du panier (€)</label>
+            <input type="number" id="basket" min="1" value="15" required />
+          </div>
+          <div class="simulator-group">
+            <label for="days">Jours d'ouverture par semaine</label>
+            <input type="number" id="days" min="1" max="7" value="7" required />
+          </div>
+        </div>
+        <button type="submit" class="simulator-btn">Calculer votre potentiel de revenus <i class="fas fa-arrow-right"></i></button>
+      </form>
+      <div class="simulator-results" id="results" style="display:none;">
+        <h3>Estimations de revenus supplémentaires</h3>
+        <ul>
+          <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span><br>
+            <span class="result-detail">Augmentation du panier moyen de 18% pour 45% des clients</span>
+          </li>
+          <li><strong>Commande en ligne :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
+            <span class="result-detail">16% de revenus additionnels via les commandes web et mobile</span>
+          </li>
+          <li><strong>Gain de productivité en cuisine :</strong> <span class="simulator-highlight">+37%</span><br>
+            <span class="result-detail">Réduction du temps de préparation et des erreurs de commande</span>
+          </li>
+          <li class="total-result"><strong>Total estimé :</strong> <span class="simulator-highlight total-highlight" id="totalGainValue"></span> <span id="annualEstimate"></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <div class="testimonial-header">
+      <h2>Ce que nos clients disent</h2>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <img src="f.png" alt="Logo Francesca" class="testimonial-logo">
+        <p class="testimonial-content">"Ce qui est intéressant avec Clyo, c'est qu'on peut tester des fonctionnalités sans que ce soit lourd à installer. Ca m'a permis d'innover plus facilement dans mon restaurant pour améliorer l'expérience de mes clients."</p>
+        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Francesca</div>
+        <div class="testimonial-company">+ de 10 établissements</div>
+      </div>
+      <div class="testimonial">
+        <img src="ayakosushi.png" alt="Logo Ayako Sushi" class="testimonial-logo">
+        <p class="testimonial-content">"On est équipé de Clyo Systems depuis plusieurs années, je n'ai jamais eu à changer de solution car elle dispose de toutes les fonctionnalités nécessaires pour nous accompagner à chaque étape de notre développement."</p>
+        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Ayako Sushi</div>
+        <div class="testimonial-company">+ de 10 établissements</div>
+      </div>
+      <div class="testimonial">
+        <img src="lafabrique.png" alt="Logo La Fabrique - Clos Aux Antes" class="testimonial-logo">
+        <p class="testimonial-content">"Avant de choisir Clyo Systems, on utilisait plusieurs logiciels pour gérer notre établissement. C'était un casse-tête pour que les outils communiquent ensemble. Clyo a remplacé toute la suite d'outils que j'utilisais, c'est beaucoup plus simple à gérer au quotidien."</p>
+        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Clos Aux Antes</div>
+        <div class="testimonial-company">La fabrique</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const simulatorForm = document.getElementById("simulatorForm");
+      const resultsDiv = document.getElementById("results");
+      
+      // Result display elements
+      const kioskGainElement = document.getElementById("kioskGainValue");
+      const onlineGainElement = document.getElementById("onlineGainValue");
+      
+      simulatorForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        
+        // Get input values
+        const restaurants = parseInt(document.getElementById("restaurants").value) || 1;
+        const tickets = parseInt(document.getElementById("tickets").value) || 100;
+        const basket = parseFloat(document.getElementById("basket").value) || 15;
+        const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
+        
+        // Calculate monthly figures (4.33 weeks per month on average)
+        const daysPerMonth = daysPerWeek * 4.33;
+        const monthlyTransactions = restaurants * tickets * daysPerMonth;
+        
+        // Calculate increased revenue based on real benchmarks
+        // Kiosk orders typically increase average ticket by 15-25%
+        const kioskBasketIncrease = 0.18; // 18% average increase
+        const kioskAdoptionRate = 0.45;   // 45% of customers use kiosks when available
+        
+        // Online ordering typically adds 12-20% in additional revenue 
+        const onlineOrderPercentage = 0.16; // 16% additional revenue from online/mobile
+        
+        // Calculate gains (monthly)
+        const kioskGain = monthlyTransactions * kioskAdoptionRate * basket * kioskBasketIncrease;
+        const onlineGain = monthlyTransactions * basket * onlineOrderPercentage;
+        
+        // Helper function to animate counting up
+        function animateValue(element, start, end, duration) {
+          let startTimestamp = null;
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const currentValue = Math.floor(progress * (end - start) + start);
+            element.textContent = `+${currentValue.toLocaleString('fr-FR')} € / mois`;
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            }
+          };
+          window.requestAnimationFrame(step);
+        }
+        
+        // Calculate total monthly and annual gains
+        const totalMonthlyGain = kioskGain + onlineGain;
+        const totalAnnualGain = totalMonthlyGain * 12;
+        
+        // Format and display results with animation
+        animateValue(kioskGainElement, 0, Math.round(kioskGain), 1200);
+        animateValue(onlineGainElement, 0, Math.round(onlineGain), 1200);
+        
+        // Set up total values
+        const totalElement = document.getElementById("totalGainValue");
+        setTimeout(() => {
+          animateValue(totalElement, 0, Math.round(totalMonthlyGain), 1000);
+        }, 800);
+        
+        document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
+        
+        // Show results with animation
+        resultsDiv.style.opacity = 0;
+        resultsDiv.style.display = "block";
+        
+        // Fade in animation
+        setTimeout(() => {
+          resultsDiv.style.transition = "opacity 0.5s ease";
+          resultsDiv.style.opacity = 1;
+        }, 50);
+        
+        // Smooth scroll to results
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  </script>
+</body>
+</html>
