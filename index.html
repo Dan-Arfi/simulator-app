@@ -383,23 +383,29 @@
   <section class="simulator-section">
     <div class="simulator-container">
       <h2 class="simulator-title">Simulateur de rentabilité</h2>
-      <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux d'Innovorder peuvent générer pour votre établissement</p>
+      <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux de <strong>Clyo Systems</strong> peuvent générer pour votre établissement.<br>La vente en ligne (click & collect) et l'utilisation des bornes sont calculées séparément.<br><span style="color:var(--primary);font-weight:500">Il est recommandé d’ajouter une borne pour chaque tranche de 100 tickets par service.</span></p>
       <form id="simulatorForm">
         <table class="simulator-table">
           <tr>
-            <td class="simulator-label"><label for="restaurants">Nombre de restaurants</label></td>
-            <td class="simulator-label"><label for="tickets">Tickets moyens par jour par restaurant</label></td>
+            <td class="simulator-label"><label for="services">Nombre de services</label></td>
+            <td class="simulator-label"><label for="tickets">Tickets moyens par service</label></td>
           </tr>
           <tr>
-            <td class="simulator-input"><input type="number" id="restaurants" min="1" value="1" required /></td>
+            <td class="simulator-input"><input type="number" id="services" min="1" value="1" required /></td>
             <td class="simulator-input"><input type="number" id="tickets" min="1" value="100" required /></td>
           </tr>
           <tr>
+            <td class="simulator-label"><label for="clickCollect">% de tickets en Click & Collect (vente en ligne)</label></td>
             <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
+          </tr>
+          <tr>
+            <td class="simulator-input"><input type="number" id="clickCollect" min="0" max="100" value="20" required /></td>
+            <td class="simulator-input"><input type="number" id="basket" min="1" value="15" required /></td>
+          </tr>
+          <tr>
             <td class="simulator-label"><label for="days">Jours d'ouverture par semaine</label></td>
           </tr>
           <tr>
-            <td class="simulator-input"><input type="number" id="basket" min="1" value="15" required /></td>
             <td class="simulator-input"><input type="number" id="days" min="1" max="7" value="7" required /></td>
           </tr>
         </table>
@@ -409,10 +415,13 @@
         <h3>Estimations de revenus supplémentaires</h3>
         <ul>
           <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span><br>
-            <span class="result-detail">Augmentation du panier moyen de 18% pour 45% des clients</span>
+            <span class="result-detail">Augmentation du panier moyen de 18% pour 45% des clients utilisant la borne</span>
           </li>
-          <li><strong>Commande en ligne :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
+          <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
             <span class="result-detail">16% de revenus additionnels via les commandes web et mobile</span>
+          </li>
+          <li><strong>Nombre de bornes recommandé :</strong> <span class="simulator-highlight" id="kioskRecommended"></span><br>
+            <span class="result-detail">Il est recommandé d’ajouter une borne pour chaque tranche de 100 tickets par service.</span>
           </li>
           <li><strong>Gain de productivité en cuisine :</strong> <span class="simulator-highlight">+37%</span><br>
             <span class="result-detail">Réduction du temps de préparation et des erreurs de commande</span>
@@ -457,40 +466,48 @@
       // Result display elements
       const kioskGainElement = document.getElementById("kioskGainValue");
       const onlineGainElement = document.getElementById("onlineGainValue");
+      const kioskRecommendedElement = document.getElementById("kioskRecommended");
       
       simulatorForm.addEventListener("submit", function(event) {
         event.preventDefault();
         
         // Get input values
-        const restaurants = parseInt(document.getElementById("restaurants").value) || 1;
+        const services = parseInt(document.getElementById("services").value) || 1;
         const tickets = parseInt(document.getElementById("tickets").value) || 100;
+        const clickCollectPercent = parseFloat(document.getElementById("clickCollect").value) || 0;
         const basket = parseFloat(document.getElementById("basket").value) || 15;
         const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
         
         // Calculate monthly figures (4.33 weeks per month on average)
         const daysPerMonth = daysPerWeek * 4.33;
-        const monthlyTransactions = restaurants * tickets * daysPerMonth;
+        const totalTicketsPerMonth = services * tickets * daysPerMonth;
+        
+        // Split tickets between click & collect and kiosks
+        const clickCollectTickets = totalTicketsPerMonth * (clickCollectPercent / 100);
+        const kioskTickets = totalTicketsPerMonth - clickCollectTickets;
         
         // Calculate increased revenue based on real benchmarks
-        // Kiosk orders typically increase average ticket by 15-25%
         const kioskBasketIncrease = 0.18; // 18% average increase
         const kioskAdoptionRate = 0.45;   // 45% of customers use kiosks when available
         
-        // Online ordering typically adds 12-20% in additional revenue 
-        const onlineOrderPercentage = 0.16; // 16% additional revenue from online/mobile
+        // Kiosk gain: only for tickets handled by kiosks
+        const kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
+        // Online gain: only for click & collect tickets
+        const onlineGain = clickCollectTickets * basket * 0.16; // 16% additional revenue from online/mobile
         
-        // Calculate gains (monthly)
-        const kioskGain = monthlyTransactions * kioskAdoptionRate * basket * kioskBasketIncrease;
-        const onlineGain = monthlyTransactions * basket * onlineOrderPercentage;
+        // Calculate number of kiosks: 1 per 100 kiosk tickets per service (per day)
+        // First, get kiosk tickets per service per day
+        const kioskTicketsPerServicePerDay = tickets * (1 - clickCollectPercent / 100);
+        const kiosks = Math.ceil(kioskTicketsPerServicePerDay / 100) * services;
         
         // Helper function to animate counting up
-        function animateValue(element, start, end, duration) {
+        function animateValue(element, start, end, duration, suffix = " € / mois") {
           let startTimestamp = null;
           const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
             const currentValue = Math.floor(progress * (end - start) + start);
-            element.textContent = `+${currentValue.toLocaleString('fr-FR')} € / mois`;
+            element.textContent = `+${currentValue.toLocaleString('fr-FR')}${suffix}`;
             if (progress < 1) {
               window.requestAnimationFrame(step);
             }
@@ -505,27 +522,29 @@
         // Format and display results with animation
         animateValue(kioskGainElement, 0, Math.round(kioskGain), 1200);
         animateValue(onlineGainElement, 0, Math.round(onlineGain), 1200);
-        
-        // Set up total values
-        const totalElement = document.getElementById("totalGainValue");
         setTimeout(() => {
-          animateValue(totalElement, 0, Math.round(totalMonthlyGain), 1000);
+          animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 1000);
         }, 800);
-        
         document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
+        // Show number of kiosks (no extra text)
+        kioskRecommendedElement.textContent = kiosks + (kiosks > 1 ? " bornes" : " borne");
         
         // Show results with animation
         resultsDiv.style.opacity = 0;
         resultsDiv.style.display = "block";
-        
-        // Fade in animation
         setTimeout(() => {
           resultsDiv.style.transition = "opacity 0.5s ease";
           resultsDiv.style.opacity = 1;
         }, 50);
-        
-        // Smooth scroll to results
         resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+      
+      // Auto-update services field based on tickets per service
+      const servicesInput = document.getElementById("services");
+      const ticketsInput = document.getElementById("tickets");
+      ticketsInput.addEventListener("input", function() {
+        const tickets = parseInt(ticketsInput.value) || 1;
+        servicesInput.value = Math.ceil(tickets / 100);
       });
     });
   </script>
