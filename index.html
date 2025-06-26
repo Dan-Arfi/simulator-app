@@ -465,12 +465,12 @@
           // Both channels (default)
           // Kiosk: 45% of tickets, 20% basket increase
           const kioskAdoptionRate = 0.70;
-          const kioskBasketIncrease = 0.20;
+          const kioskBasketIncrease = 0.25;
           let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
           // Click & Collect: 18% more orders, 70% of those get 20% basket increase
           const onlineOrderIncrease = 0.18;
           const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
-          const clickCollectBasketIncrease = 0.20;
+          const clickCollectBasketIncrease = 0.30;
           const clickCollectAdoption = 0.80;
           let onlineGain = clickCollectTickets * basket;
           onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
