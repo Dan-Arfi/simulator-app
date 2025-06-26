@@ -412,9 +412,6 @@
           <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
             <span class="result-detail">18% de commandes en plus, dont 70% avec une augmentation du panier moyen de 20%</span>
           </li>
-          <li><strong>Nombre de bornes recommandé :</strong> <span class="simulator-highlight" id="kioskRecommended"></span><br>
-            <span class="result-detail">Il est recommandé d’ajouter une borne pour chaque tranche de 100 tickets par service.</span>
-          </li>
           <li class="total-result"><strong>Total estimé :</strong> <span class="simulator-highlight total-highlight" id="totalGainValue"></span> <span id="annualEstimate"></span></li>
         </ul>
       </div>
@@ -470,7 +467,7 @@
         // Both channels (default)
         // Kiosk: 45% of tickets, 20% basket increase
         const kioskAdoptionRate = 0.45;
-        const kioskBasketIncrease = 1.20;
+        const kioskBasketIncrease = 0.20;
         let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
         let kiosks = Math.ceil((tickets * kioskAdoptionRate) / 100);
         // Click & Collect: 18% more orders, 70% of those get 20% basket increase
