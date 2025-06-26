@@ -387,26 +387,18 @@
       <form id="simulatorForm">
         <table class="simulator-table">
           <tr>
-            <td class="simulator-label"><label for="services">Nombre de services</label></td>
-            <td class="simulator-label"><label for="tickets">Tickets moyens par service</label></td>
-          </tr>
-          <tr>
-            <td class="simulator-input"><input type="number" id="services" min="1" value="1" required /></td>
-            <td class="simulator-input"><input type="number" id="tickets" min="1" value="100" required /></td>
-          </tr>
-          <tr>
-            <td class="simulator-label"><label for="clickCollect">% de tickets en Click & Collect (vente en ligne)</label></td>
+            <td class="simulator-label"><label for="tickets">Nombre de tickets par jour</label></td>
             <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
           </tr>
           <tr>
-            <td class="simulator-input"><input type="number" id="clickCollect" min="0" max="100" value="20" required /></td>
+            <td class="simulator-input"><input type="number" id="tickets" min="1" value="100" required /></td>
             <td class="simulator-input"><input type="number" id="basket" min="1" value="15" required /></td>
           </tr>
           <tr>
-            <td class="simulator-label"><label for="days">Jours d'ouverture par semaine</label></td>
+            <td class="simulator-label" colspan="2"><label for="days">Jours d'ouverture par semaine</label></td>
           </tr>
           <tr>
-            <td class="simulator-input"><input type="number" id="days" min="1" max="7" value="7" required /></td>
+            <td class="simulator-input" colspan="2"><input type="number" id="days" min="1" max="7" value="7" required /></td>
           </tr>
         </table>
         <button type="submit" class="simulator-btn">Calculer votre potentiel de revenus <i class="fas fa-arrow-right"></i></button>
@@ -415,16 +407,13 @@
         <h3>Estimations de revenus supplémentaires</h3>
         <ul>
           <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span><br>
-            <span class="result-detail">Augmentation du panier moyen de 18% pour 45% des clients utilisant la borne</span>
+            <span class="result-detail">Augmentation du panier moyen de 20% pour 45% des clients utilisant la borne</span>
           </li>
           <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
-            <span class="result-detail">16% de revenus additionnels via les commandes web et mobile</span>
+            <span class="result-detail">18% de commandes en plus, dont 70% avec une augmentation du panier moyen de 20%</span>
           </li>
           <li><strong>Nombre de bornes recommandé :</strong> <span class="simulator-highlight" id="kioskRecommended"></span><br>
             <span class="result-detail">Il est recommandé d’ajouter une borne pour chaque tranche de 100 tickets par service.</span>
-          </li>
-          <li><strong>Gain de productivité en cuisine :</strong> <span class="simulator-highlight">+37%</span><br>
-            <span class="result-detail">Réduction du temps de préparation et des erreurs de commande</span>
           </li>
           <li class="total-result"><strong>Total estimé :</strong> <span class="simulator-highlight total-highlight" id="totalGainValue"></span> <span id="annualEstimate"></span></li>
         </ul>
@@ -472,33 +461,25 @@
         event.preventDefault();
         
         // Get input values
-        const services = parseInt(document.getElementById("services").value) || 1;
         const tickets = parseInt(document.getElementById("tickets").value) || 100;
-        const clickCollectPercent = parseFloat(document.getElementById("clickCollect").value) || 0;
         const basket = parseFloat(document.getElementById("basket").value) || 15;
         const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
-        
-        // Calculate monthly figures (4.33 weeks per month on average)
+        // Monthly tickets
         const daysPerMonth = daysPerWeek * 4.33;
-        const totalTicketsPerMonth = services * tickets * daysPerMonth;
-        
-        // Split tickets between click & collect and kiosks
-        const clickCollectTickets = totalTicketsPerMonth * (clickCollectPercent / 100);
-        const kioskTickets = totalTicketsPerMonth - clickCollectTickets;
-        
-        // Calculate increased revenue based on real benchmarks
-        const kioskBasketIncrease = 0.18; // 18% average increase
-        const kioskAdoptionRate = 0.45;   // 45% of customers use kiosks when available
-        
-        // Kiosk gain: only for tickets handled by kiosks
-        const kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
-        // Online gain: only for click & collect tickets
-        const onlineGain = clickCollectTickets * basket * 0.16; // 16% additional revenue from online/mobile
-        
-        // Calculate number of kiosks: 1 per 100 kiosk tickets per service (per day)
-        // First, get kiosk tickets per service per day
-        const kioskTicketsPerServicePerDay = tickets * (1 - clickCollectPercent / 100);
-        const kiosks = Math.ceil(kioskTicketsPerServicePerDay / 100) * services;
+        const totalTicketsPerMonth = tickets * daysPerMonth;
+        // Both channels (default)
+        // Kiosk: 45% of tickets, 20% basket increase
+        const kioskAdoptionRate = 0.45;
+        const kioskBasketIncrease = 0.20;
+        let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
+        let kiosks = Math.ceil((tickets * kioskAdoptionRate) / 100);
+        // Click & Collect: 18% more orders, 70% of those get 20% basket increase
+        const onlineOrderIncrease = 0.18;
+        const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
+        const clickCollectBasketIncrease = 0.20;
+        const clickCollectAdoption = 0.70;
+        let onlineGain = clickCollectTickets * basket;
+        onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
         
         // Helper function to animate counting up
         function animateValue(element, start, end, duration, suffix = " € / mois") {
@@ -518,16 +499,14 @@
         // Calculate total monthly and annual gains
         const totalMonthlyGain = kioskGain + onlineGain;
         const totalAnnualGain = totalMonthlyGain * 12;
-        
-        // Format and display results with animation
-        animateValue(kioskGainElement, 0, Math.round(kioskGain), 1200);
-        animateValue(onlineGainElement, 0, Math.round(onlineGain), 1200);
+        // Animate and display results
+        animateValue(kioskGainElement, 0, Math.round(kioskGain), 1000);
+        animateValue(onlineGainElement, 0, Math.round(onlineGain), 1000);
         setTimeout(() => {
-          animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 1000);
-        }, 800);
+          animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 900);
+        }, 700);
         document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
-        // Show number of kiosks (no extra text)
-        kioskRecommendedElement.textContent = kiosks + (kiosks > 1 ? " bornes" : " borne");
+        kioskRecommendedElement.textContent = kiosks > 0 ? (kiosks + (kiosks > 1 ? " bornes" : " borne")) : "-";
         
         // Show results with animation
         resultsDiv.style.opacity = 0;
@@ -537,14 +516,6 @@
           resultsDiv.style.opacity = 1;
         }, 50);
         resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
-      
-      // Auto-update services field based on tickets per service
-      const servicesInput = document.getElementById("services");
-      const ticketsInput = document.getElementById("tickets");
-      ticketsInput.addEventListener("input", function() {
-        const tickets = parseInt(ticketsInput.value) || 1;
-        servicesInput.value = Math.ceil(tickets / 100);
       });
     });
   </script>
