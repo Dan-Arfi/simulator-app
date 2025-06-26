@@ -407,7 +407,7 @@
         <h3>Estimations de revenus supplémentaires</h3>
         <ul>
           <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span><br>
-            <span class="result-detail">Augmentation du panier moyen de 25% pour 70% des clients utilisant la borne</span>
+            <span class="result-detail">Augmentation du panier moyen de 25% pour 70% des clients utilisant la borne et +5% de commandes en plus</span>
           </li>
           <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
             <span class="result-detail">18% de commandes en plus, dont 80% avec une augmentation du panier moyen de 30%</span>
@@ -462,12 +462,13 @@
           // Monthly tickets
           const daysPerMonth = daysPerWeek * 4.33;
           const totalTicketsPerMonth = tickets * daysPerMonth;
-          // Both channels (default)
-          // Kiosk: 45% of tickets, 20% basket increase
+          // Bornes de commande : +5% de commandes en plus, 70% des clients, +25% panier
+          const kioskOrderIncrease = 0.05;
           const kioskAdoptionRate = 0.70;
           const kioskBasketIncrease = 0.25;
-          let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
-          // Click & Collect: 18% more orders, 70% of those get 20% basket increase
+          const kioskTickets = totalTicketsPerMonth * (1 + kioskOrderIncrease);
+          let kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
+          // Click & Collect: 18% more orders, 80% of those get 30% basket increase
           const onlineOrderIncrease = 0.18;
           const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
           const clickCollectBasketIncrease = 0.30;
