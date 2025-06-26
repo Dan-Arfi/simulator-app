@@ -445,75 +445,72 @@
   </section>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener("DOMContentLoaded", function() {
       const simulatorForm = document.getElementById("simulatorForm");
       const resultsDiv = document.getElementById("results");
-      
-      // Result display elements
       const kioskGainElement = document.getElementById("kioskGainValue");
       const onlineGainElement = document.getElementById("onlineGainValue");
-      const kioskRecommendedElement = document.getElementById("kioskRecommended");
-      
-      simulatorForm.addEventListener("submit", function(event) {
-        event.preventDefault();
-        
-        // Get input values
-        const tickets = parseInt(document.getElementById("tickets").value) || 100;
-        const basket = parseFloat(document.getElementById("basket").value) || 15;
-        const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
-        // Monthly tickets
-        const daysPerMonth = daysPerWeek * 4.33;
-        const totalTicketsPerMonth = tickets * daysPerMonth;
-        // Both channels (default)
-        // Kiosk: 45% of tickets, 20% basket increase
-        const kioskAdoptionRate = 0.45;
-        const kioskBasketIncrease = 0.20;
-        let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
-        let kiosks = Math.ceil((tickets * kioskAdoptionRate) / 100);
-        // Click & Collect: 18% more orders, 70% of those get 20% basket increase
-        const onlineOrderIncrease = 0.18;
-        const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
-        const clickCollectBasketIncrease = 0.20;
-        const clickCollectAdoption = 0.70;
-        let onlineGain = clickCollectTickets * basket;
-        onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
-        
-        // Helper function to animate counting up
-        function animateValue(element, start, end, duration, suffix = " € / mois") {
-          let startTimestamp = null;
-          const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const currentValue = Math.floor(progress * (end - start) + start);
-            element.textContent = `+${currentValue.toLocaleString('fr-FR')}${suffix}`;
-            if (progress < 1) {
-              window.requestAnimationFrame(step);
-            }
-          };
-          window.requestAnimationFrame(step);
-        }
-        
-        // Calculate total monthly and annual gains
-        const totalMonthlyGain = kioskGain + onlineGain;
-        const totalAnnualGain = totalMonthlyGain * 12;
-        // Animate and display results
-        animateValue(kioskGainElement, 0, Math.round(kioskGain), 1000);
-        animateValue(onlineGainElement, 0, Math.round(onlineGain), 1000);
-        setTimeout(() => {
-          animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 900);
-        }, 700);
-        document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
-        kioskRecommendedElement.textContent = kiosks > 0 ? (kiosks + (kiosks > 1 ? " bornes" : " borne")) : "-";
-        
-        // Show results with animation
-        resultsDiv.style.opacity = 0;
-        resultsDiv.style.display = "block";
-        setTimeout(() => {
-          resultsDiv.style.transition = "opacity 0.5s ease";
-          resultsDiv.style.opacity = 1;
-        }, 50);
-        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
+      // No more kioskRecommendedElement
+
+      if (simulatorForm) {
+        simulatorForm.addEventListener("submit", function(event) {
+          event.preventDefault();
+          // Get input values
+          const tickets = parseInt(document.getElementById("tickets").value) || 100;
+          const basket = parseFloat(document.getElementById("basket").value) || 15;
+          const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
+          // Monthly tickets
+          const daysPerMonth = daysPerWeek * 4.33;
+          const totalTicketsPerMonth = tickets * daysPerMonth;
+          // Both channels (default)
+          // Kiosk: 45% of tickets, 20% basket increase
+          const kioskAdoptionRate = 0.45;
+          const kioskBasketIncrease = 0.20;
+          let kioskGain = totalTicketsPerMonth * kioskAdoptionRate * basket * kioskBasketIncrease;
+          // Click & Collect: 18% more orders, 70% of those get 20% basket increase
+          const onlineOrderIncrease = 0.18;
+          const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
+          const clickCollectBasketIncrease = 0.20;
+          const clickCollectAdoption = 0.70;
+          let onlineGain = clickCollectTickets * basket;
+          onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
+
+          // Helper function to animate counting up
+          function animateValue(element, start, end, duration, suffix = " € / mois") {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+              if (!startTimestamp) startTimestamp = timestamp;
+              const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+              const currentValue = Math.floor(progress * (end - start) + start);
+              element.textContent = `+${currentValue.toLocaleString('fr-FR')}${suffix}`;
+              if (progress < 1) {
+                window.requestAnimationFrame(step);
+              }
+            };
+            window.requestAnimationFrame(step);
+          }
+
+          // Calculate total monthly and annual gains
+          const totalMonthlyGain = kioskGain + onlineGain;
+          const totalAnnualGain = totalMonthlyGain * 12;
+          // Animate and display results
+          animateValue(kioskGainElement, 0, Math.round(kioskGain), 1000);
+          animateValue(onlineGainElement, 0, Math.round(onlineGain), 1000);
+          setTimeout(() => {
+            animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 900);
+          }, 700);
+          document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
+
+          // Show results with animation
+          resultsDiv.style.opacity = 0;
+          resultsDiv.style.display = "block";
+          setTimeout(() => {
+            resultsDiv.style.transition = "opacity 0.5s ease";
+            resultsDiv.style.opacity = 1;
+          }, 50);
+          resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
     });
   </script>
 </body>
