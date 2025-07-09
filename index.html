@@ -5,347 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Clyo - Logiciel et caisse enregistreuse pour restaurant</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    :root {
-      --primary: #2563eb;
-      --secondary: #3b82f6;
-      --background: #f8fafc;
-      --text: #1e293b;
-      --muted: #64748b;
-      --accent: #0ea5e9;
-      --gradient-start: #1e40af;
-      --gradient-end: #3b82f6;
-      --card-bg: #ffffff;
-      --success: #10b981;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background-color: var(--background);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    /* Navbar Styles */
-    .navbar {
-      background-color: #ffffff;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      padding: 0.8rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .navbar-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    .navbar-logo {
-      display: flex;
-      align-items: center;
-    }
-    .navbar-logo img {
-      height: 40px;
-      width: auto;
-      display: block;
-    }
-    .navbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    /* Header Styles */
-    header {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-      color: #fff;
-      padding: 3.5rem 1rem 4.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      position: relative;
-      overflow: hidden;
-      margin-top: 0;
-    }
-    .header-content {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: flex-start;
-      gap: 2rem;
-      position: relative;
-      z-index: 2;
-    }
-    .header-text {
-      flex: 1;
-      text-align: left;
-      color: #fff;
-    }
-    .header-text h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 0.7rem;
-      line-height: 1.2;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.08);
-    }
-    .header-text .subtitle {
-      font-size: 1.3rem;
-      margin-bottom: 0.7rem;
-      color: #e0e7ef;
-      font-weight: 500;
-    }
-    .header-text .desc {
-      font-size: 1.1rem;
-      margin-bottom: 1.2rem;
-      color: #e0e7ef;
-      font-weight: 400;
-      line-height: 1.5;
-    }
-    .header-features {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 1.2rem;
-    }
-    .header-feature {
-      background: rgba(255,255,255,0.13);
-      color: #fff;
-      padding: 0.7rem 1.2rem;
-      border-radius: 12px;
-      font-weight: 500;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      border: 1px solid rgba(255,255,255,0.18);
-      transition: all 0.2s ease;
-    }
-    .header-feature:hover {
-      background: rgba(255,255,255,0.25);
-      transform: translateY(-3px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    .header-feature i {
-      color: #fff;
-      font-size: 1.2rem;
-    }
-    /* Simulator */
-    .simulator-section {
-      background: #fff;
-      padding: 3rem 0 2rem 0;
-    }
-    .simulator-container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #f8fafc;
-      border-radius: 18px;
-      box-shadow: 0 4px 24px rgba(37,99,235,0.07);
-      padding: 2.5rem 2rem 2rem 2rem;
-      margin-bottom: 3rem;
-    }
-    .simulator-title {
-      color: var(--primary);
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
-    .simulator-desc {
-      color: var(--muted);
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .simulator-table {
-      width: 100%;
-      margin-bottom: 1.5rem;
-      border-collapse: separate;
-      border-spacing: 0 0;
-    }
-    .simulator-label {
-      padding: 0 1rem 0.5rem 0;
-      vertical-align: bottom;
-      width: 50%;
-    }
-    .simulator-label label {
-      font-weight: 600;
-      color: var(--text);
-      display: block;
-    }
-    .simulator-input {
-      padding: 0 1rem 1.5rem 0;
-      vertical-align: top;
-    }
-    .simulator-input input {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      font-size: 1rem;
-      transition: border 0.2s;
-      height: 50px; /* Fixed height for all inputs */
-    }
-    .simulator-input input:focus {
-      border-color: var(--primary);
-      outline: none;
-    }
-    .simulator-group input:focus {
-      border-color: var(--primary);
-      outline: none;
-    }
-    .simulator-btn {
-      margin-top: 1.5rem;
-      width: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: #fff;
-      border: none;
-      padding: 1rem;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.08);
-    }
-    .simulator-btn:hover {
-      background: linear-gradient(90deg, var(--secondary), var(--primary));
-    }
-    .simulator-results {
-      margin-top: 2.5rem;
-      background: #e8f0fe;
-      border-left: 5px solid var(--accent);
-      border-radius: 10px;
-      padding: 1.5rem 1.5rem 1rem 1.5rem;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.06);
-    }
-    .simulator-results h3 {
-      color: var(--primary);
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-    }
-    .simulator-results ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .simulator-results li {
-      font-size: 1.08rem;
-      margin-bottom: 0.7rem;
-      color: var(--text);
-    }
-    .simulator-highlight {
-      color: var(--accent);
-      font-weight: 700;
-    }
-    .result-detail {
-      font-size: 0.9rem;
-      color: var(--muted);
-      display: block;
-      margin-top: 0.2rem;
-      margin-left: 0.5rem;
-    }
-    .total-result {
-      margin-top: 1.2rem;
-      padding-top: 1rem;
-      border-top: 1px dashed #cbd5e1;
-    }
-    .total-highlight {
-      color: var(--success);
-      font-size: 1.2rem;
-    }
-    /* Testimonials */
-    .testimonials {
-      max-width: 1100px;
-      margin: 3rem auto 0;
-      padding: 2.5rem 2rem;
-      background: var(--card-bg);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(59,130,246,0.08);
-    }
-    .testimonial-header h2 {
-      color: var(--primary);
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-weight: 700;
-    }
-    .testimonial-grid {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .testimonial {
-      background: #f1f5fb;
-      border-radius: 14px;
-      padding: 1.5rem 1.2rem;
-      box-shadow: 0 2px 12px rgba(37,99,235,0.06);
-      max-width: 320px;
-      flex: 1 1 260px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 1.5rem;
-      color: var(--text);
-    }
-    .testimonial-content {
-      font-style: italic;
-      color: var(--text);
-      margin-bottom: 1rem;
-      font-size: 1.05rem;
-    }
-    .testimonial-logo {
-      width: 70px;
-      height: 70px;
-      border-radius: 8px;
-      object-fit: contain;
-      background-color: #333;
-      padding: 8px;
-      margin-bottom: 1.2rem;
-      display: block;
-      align-self: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-    .testimonial-author {
-      font-weight: 600;
-      color: var(--primary);
-      margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .testimonial-company {
-      color: var(--muted);
-      font-size: 0.98rem;
-    }
-    /* Responsive */
-    @media (max-width: 900px) {
-      .header-content { flex-direction: column; align-items: flex-start; }
-      .testimonials { padding: 1.5rem 0.5rem; }
-      .testimonial-grid { flex-direction: column; gap: 1.2rem; }
-    }
-    @media (max-width: 600px) {
-      .simulator-table, .simulator-table tbody, .simulator-table tr, .simulator-table td {
-        display: block;
-        width: 100%;
-      }
-      .simulator-label {
-        padding: 0 0 0.5rem 0;
-      }
-      .simulator-input {
-        padding: 0 0 1.5rem 0;
-      }
-      .simulator-container {
-        padding: 1.2rem 0.5rem 1.5rem 0.5rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="navbar">
@@ -382,67 +43,64 @@
 
   <section class="simulator-section">
     <div class="simulator-container">
-      <h2 class="simulator-title">Simulateur de rentabilité</h2>
-      <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux de <strong>Clyo Systems</strong> peuvent générer pour votre établissement.<br>La vente en ligne (click & collect) et l'utilisation des bornes sont calculées séparément.<br><span style="color:var(--primary);font-weight:500">Il est recommandé d’ajouter une borne pour chaque tranche de 100 tickets par service.</span></p>
-      <form id="simulatorForm">
-        <table class="simulator-table">
-          <tr>
-            <td class="simulator-label"><label for="tickets">Nombre de tickets par jour</label></td>
-            <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
-          </tr>
-          <tr>
-            <td class="simulator-input"><input type="number" id="tickets" min="1" value="100" required /></td>
-            <td class="simulator-input"><input type="number" id="basket" min="1" value="15" required /></td>
-          </tr>
-          <tr>
-            <td class="simulator-label" colspan="2"><label for="days">Jours d'ouverture par semaine</label></td>
-          </tr>
-          <tr>
-            <td class="simulator-input" colspan="2"><input type="number" id="days" min="1" max="7" value="7" required /></td>
-          </tr>
-        </table>
-        <button type="submit" class="simulator-btn">Calculer votre potentiel de revenus <i class="fas fa-arrow-right"></i></button>
-      </form>
-      <div class="simulator-results" id="results" style="display:none;">
-        <h3>Estimations de revenus supplémentaires</h3>
-        <ul>
-          <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span><br>
-            <span class="result-detail">Augmentation du panier moyen de 25% pour 70% des clients utilisant la borne et +5% de commandes en plus</span>
-          </li>
-          <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span><br>
-            <span class="result-detail">18% de commandes en plus, dont 80% avec une augmentation du panier moyen de 30%</span>
-          </li>
-          <li class="total-result"><strong>Total revenus supplémentaires :</strong> <span class="simulator-highlight total-highlight" id="totalGainValue"></span> <span id="annualEstimate"></span></li>
-        </ul>
+      <div class="simulator-content">
+        <h2 class="simulator-title">Simulateur de rentabilité</h2>
+        <p class="simulator-desc">Estimez les revenus supplémentaires mensuels que les outils digitaux de <strong>Clyo Systems</strong> peuvent générer pour votre établissement.<br>La vente en ligne (click & collect) et l'utilisation des bornes sont calculées séparément.<br>
+        <form id="simulatorForm">
+          <table class="simulator-table">
+            <tr>
+              <td class="simulator-label"><label for="tickets">Nombre de tickets par jour</label></td>
+              <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
+            </tr>
+            <tr>
+              <td class="simulator-input"><input type="number" id="tickets" min="1" value="0" required /></td>
+              <td class="simulator-input"><input type="number" id="basket" min="1" value="0" required /></td>
+            </tr>
+            <tr>
+              <td class="simulator-label" colspan="2"><label for="days">Jours d'ouverture par semaine: <span id="daysValue">0</span></label></td>
+            </tr>
+            <tr>
+              <td class="simulator-input" colspan="2">
+                <div class="slider-container">
+                  <input type="range" min="0" max="7" value="0" class="slider" id="days">
+                  <div class="slider-steps">
+                    <span>0</span>
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+      <div class="simulator-results-container">
+        <h2 class="simulator-title">Résultats pour votre restaurant</h2>
+        <div class="simulator-results" id="results" style="display:none;">
+          <ul>
+            <li><strong>Bornes de commande :</strong> <span class="simulator-highlight" id="kioskGainValue"></span></li>
+            <li><strong>Vente en ligne (Click & Collect) :</strong> <span class="simulator-highlight" id="onlineGainValue"></span></li>
+            <li class="total-result"><strong>Total revenus supplémentaires :</strong> <span class="simulator-highlight total-highlight" id="totalGainValue"></span> <span id="annualEstimate"></span></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="testimonials">
-    <div class="testimonial-header">
-      <h2>Ce que nos clients disent</h2>
+  <div class="explanations-container">
+    <div class="explanations-section">
+      <h3>Comment ces chiffres sont calculés</h3>
+      <ul>
+        <li><strong>Bornes de commande :</strong> Augmentation du panier moyen de 25% pour 70% des clients utilisant la borne et +5% de commandes en plus</li>
+        <li><strong>Vente en ligne (Click & Collect) :</strong> 18% de commandes en plus, dont 80% avec une augmentation du panier moyen de 30%</li>
+      </ul>
     </div>
-    <div class="testimonial-grid">
-      <div class="testimonial">
-        <img src="f.png" alt="Logo Francesca" class="testimonial-logo">
-        <p class="testimonial-content">"Ce qui est intéressant avec Clyo, c'est qu'on peut tester des fonctionnalités sans que ce soit lourd à installer. Ca m'a permis d'innover plus facilement dans mon restaurant pour améliorer l'expérience de mes clients."</p>
-        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Francesca</div>
-        <div class="testimonial-company">+ de 10 établissements</div>
-      </div>
-      <div class="testimonial">
-        <img src="ayakosushi.png" alt="Logo Ayako Sushi" class="testimonial-logo">
-        <p class="testimonial-content">"On est équipé de Clyo Systems depuis plusieurs années, je n'ai jamais eu à changer de solution car elle dispose de toutes les fonctionnalités nécessaires pour nous accompagner à chaque étape de notre développement."</p>
-        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Ayako Sushi</div>
-        <div class="testimonial-company">+ de 10 établissements</div>
-      </div>
-      <div class="testimonial">
-        <img src="lafabrique.png" alt="Logo La Fabrique - Clos Aux Antes" class="testimonial-logo">
-        <p class="testimonial-content">"Avant de choisir Clyo Systems, on utilisait plusieurs logiciels pour gérer notre établissement. C'était un casse-tête pour que les outils communiquent ensemble. Clyo a remplacé toute la suite d'outils que j'utilisais, c'est beaucoup plus simple à gérer au quotidien."</p>
-        <div class="testimonial-author"><i class="fas fa-user-circle"></i> Clos Aux Antes</div>
-        <div class="testimonial-company">La fabrique</div>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <script>
     window.addEventListener("DOMContentLoaded", function() {
@@ -450,68 +108,78 @@
       const resultsDiv = document.getElementById("results");
       const kioskGainElement = document.getElementById("kioskGainValue");
       const onlineGainElement = document.getElementById("onlineGainValue");
-      // No more kioskRecommendedElement
+      
+      // Update the days value display when slider moves
+      const daysSlider = document.getElementById("days");
+      const daysValueDisplay = document.getElementById("daysValue");
+      const ticketsInput = document.getElementById("tickets");
+      const basketInput = document.getElementById("basket");
+      
+      // Function to calculate and display results
+      function calculateResults() {
+        // Get input values
+        const tickets = parseInt(ticketsInput.value) || 0;
+        const basket = parseFloat(basketInput.value) || 0;
+        const daysPerWeek = parseInt(daysSlider.value) || 0;
+        
+        // Monthly tickets
+        const daysPerMonth = daysPerWeek * 4.33;
+        const totalTicketsPerMonth = tickets * daysPerMonth;
+        
+        // Bornes de commande : +5% de commandes en plus, 70% des clients, +25% panier
+        const kioskOrderIncrease = 0.05;
+        const kioskAdoptionRate = 0.70;
+        const kioskBasketIncrease = 0.25;
+        const kioskTickets = totalTicketsPerMonth * (1 + kioskOrderIncrease);
+        let kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
+        
+        // Click & Collect: 18% more orders, 80% of those get 30% basket increase
+        const onlineOrderIncrease = 0.18;
+        const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
+        const clickCollectBasketIncrease = 0.30;
+        const clickCollectAdoption = 0.80;
+        let onlineGain = clickCollectTickets * basket;
+        onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
 
-      if (simulatorForm) {
-        simulatorForm.addEventListener("submit", function(event) {
-          event.preventDefault();
-          // Get input values
-          const tickets = parseInt(document.getElementById("tickets").value) || 100;
-          const basket = parseFloat(document.getElementById("basket").value) || 15;
-          const daysPerWeek = parseInt(document.getElementById("days").value) || 7;
-          // Monthly tickets
-          const daysPerMonth = daysPerWeek * 4.33;
-          const totalTicketsPerMonth = tickets * daysPerMonth;
-          // Bornes de commande : +5% de commandes en plus, 70% des clients, +25% panier
-          const kioskOrderIncrease = 0.05;
-          const kioskAdoptionRate = 0.70;
-          const kioskBasketIncrease = 0.25;
-          const kioskTickets = totalTicketsPerMonth * (1 + kioskOrderIncrease);
-          let kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
-          // Click & Collect: 18% more orders, 80% of those get 30% basket increase
-          const onlineOrderIncrease = 0.18;
-          const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
-          const clickCollectBasketIncrease = 0.30;
-          const clickCollectAdoption = 0.80;
-          let onlineGain = clickCollectTickets * basket;
-          onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
+        // Calculate total monthly and annual gains
+        const totalMonthlyGain = kioskGain + onlineGain;
+        const totalAnnualGain = totalMonthlyGain * 12;
+        
+        // Update display values
+        kioskGainElement.textContent = `+${Math.round(kioskGain).toLocaleString('fr-FR')} € / mois`;
+        onlineGainElement.textContent = `+${Math.round(onlineGain).toLocaleString('fr-FR')} € / mois`;
+        document.getElementById("totalGainValue").textContent = `+${Math.round(totalMonthlyGain).toLocaleString('fr-FR')} € / mois`;
+        document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
 
-          // Helper function to animate counting up
-          function animateValue(element, start, end, duration, suffix = " € / mois") {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-              if (!startTimestamp) startTimestamp = timestamp;
-              const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-              const currentValue = Math.floor(progress * (end - start) + start);
-              element.textContent = `+${currentValue.toLocaleString('fr-FR')}${suffix}`;
-              if (progress < 1) {
-                window.requestAnimationFrame(step);
-              }
-            };
-            window.requestAnimationFrame(step);
-          }
-
-          // Calculate total monthly and annual gains
-          const totalMonthlyGain = kioskGain + onlineGain;
-          const totalAnnualGain = totalMonthlyGain * 12;
-          // Animate and display results
-          animateValue(kioskGainElement, 0, Math.round(kioskGain), 1000);
-          animateValue(onlineGainElement, 0, Math.round(onlineGain), 1000);
-          setTimeout(() => {
-            animateValue(document.getElementById("totalGainValue"), 0, Math.round(totalMonthlyGain), 900);
-          }, 700);
-          document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
-
-          // Show results with animation
+        // Show results if hidden
+        if (resultsDiv.style.display === "none") {
           resultsDiv.style.opacity = 0;
           resultsDiv.style.display = "block";
           setTimeout(() => {
             resultsDiv.style.transition = "opacity 0.5s ease";
             resultsDiv.style.opacity = 1;
           }, 50);
-          resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        });
+        }
       }
+      
+      // Set up event listeners for auto-calculation
+      if (daysSlider && daysValueDisplay) {
+        daysSlider.oninput = function() {
+          daysValueDisplay.textContent = this.value;
+          calculateResults();
+        }
+      }
+      
+      if (ticketsInput) {
+        ticketsInput.oninput = calculateResults;
+      }
+      
+      if (basketInput) {
+        basketInput.oninput = calculateResults;
+      }
+      
+      // Initial calculation on page load
+      calculateResults();
     });
   </script>
 </body>
