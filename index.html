@@ -6,7 +6,6 @@
   <title>Clyo - Logiciel et caisse enregistreuse pour restaurant</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="navbar">
@@ -115,6 +114,54 @@
       const ticketsInput = document.getElementById("tickets");
       const basketInput = document.getElementById("basket");
       
+      // Function to update slider track
+      function updateSliderTrack() {
+        const percent = (daysSlider.value / daysSlider.max) * 100;
+        daysSlider.style.setProperty('--percent', percent + '%');
+      }
+      
+      
+      // Function to animate a counter from 0 to target value
+      function animateCounter(element, targetValue, prefix = '', suffix = '') {
+        // Remove any previous animation class
+        element.classList.remove('animate-counter');
+        
+        // Get the target value as a number (removing any formatting)
+        const target = parseInt(targetValue.replace(/[^\d]/g, ''));
+        const duration = 1000; // Animation duration in ms
+        const frameDuration = 1000/60; // Assuming 60fps
+        const totalFrames = Math.round(duration / frameDuration);
+        let frame = 0;
+        
+        // Store current value
+        const currentValue = 0;
+        
+        // Trigger reflow to restart animation
+        void element.offsetWidth;
+        element.classList.add('animate-counter');
+        
+        // Start animation
+        const counter = setInterval(() => {
+          frame++;
+          
+          // Calculate progress using easeOutQuad easing function
+          const progress = frame / totalFrames;
+          const easeProgress = -progress * (progress - 2);
+          
+          // Calculate current value based on progress
+          const value = Math.floor(easeProgress * target);
+          
+          // Update the text content
+          element.textContent = `${prefix}${value.toLocaleString('fr-FR')}${suffix}`;
+          
+          // If we've reached the target value, clear the interval
+          if (frame === totalFrames) {
+            clearInterval(counter);
+            element.textContent = `${prefix}${target.toLocaleString('fr-FR')}${suffix}`;
+          }
+        }, frameDuration);
+      }
+      
       // Function to calculate and display results
       function calculateResults() {
         // Get input values
@@ -145,12 +192,12 @@
         const totalMonthlyGain = kioskGain + onlineGain;
         const totalAnnualGain = totalMonthlyGain * 12;
         
-        // Update display values
-        kioskGainElement.textContent = `+${Math.round(kioskGain).toLocaleString('fr-FR')} € / mois`;
-        onlineGainElement.textContent = `+${Math.round(onlineGain).toLocaleString('fr-FR')} € / mois`;
-        document.getElementById("totalGainValue").textContent = `+${Math.round(totalMonthlyGain).toLocaleString('fr-FR')} € / mois`;
-        document.getElementById("annualEstimate").textContent = `(${Math.round(totalAnnualGain).toLocaleString('fr-FR')} € / an)`;
-
+        // Round the values
+        const roundedKioskGain = Math.round(kioskGain);
+        const roundedOnlineGain = Math.round(onlineGain);
+        const roundedMonthlyGain = Math.round(totalMonthlyGain);
+        const roundedAnnualGain = Math.round(totalAnnualGain);
+        
         // Show results if hidden
         if (resultsDiv.style.display === "none") {
           resultsDiv.style.opacity = 0;
@@ -158,7 +205,19 @@
           setTimeout(() => {
             resultsDiv.style.transition = "opacity 0.5s ease";
             resultsDiv.style.opacity = 1;
+            
+            // Animate counters with a slight delay between each
+            setTimeout(() => animateCounter(kioskGainElement, roundedKioskGain.toString(), '+', ' € / mois'), 100);
+            setTimeout(() => animateCounter(onlineGainElement, roundedOnlineGain.toString(), '+', ' € / mois'), 300);
+            setTimeout(() => animateCounter(document.getElementById("totalGainValue"), roundedMonthlyGain.toString(), '+', ' € / mois'), 500);
+            setTimeout(() => animateCounter(document.getElementById("annualEstimate"), roundedAnnualGain.toString(), '(', ' € / an)'), 700);
           }, 50);
+        } else {
+          // Animate counters with a slight delay between each
+          animateCounter(kioskGainElement, roundedKioskGain.toString(), '+', ' € / mois');
+          animateCounter(onlineGainElement, roundedOnlineGain.toString(), '+', ' € / mois');
+          animateCounter(document.getElementById("totalGainValue"), roundedMonthlyGain.toString(), '+', ' € / mois');
+          animateCounter(document.getElementById("annualEstimate"), roundedAnnualGain.toString(), '(', ' € / an)');
         }
       }
       
@@ -166,6 +225,7 @@
       if (daysSlider && daysValueDisplay) {
         daysSlider.oninput = function() {
           daysValueDisplay.textContent = this.value;
+          updateSliderTrack(); // Update the track display
           calculateResults();
         }
       }
@@ -178,7 +238,8 @@
         basketInput.oninput = calculateResults;
       }
       
-      // Initial calculation on page load
+      // Initial calculation and slider track setup
+      updateSliderTrack();
       calculateResults();
     });
   </script>
