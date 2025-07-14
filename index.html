@@ -6,6 +6,7 @@
   <title>Clyo - Logiciel et caisse enregistreuse pour restaurant</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -14,9 +15,6 @@
         <a href="#">
           <img src="clyo_logo-23.png" alt="Clyo Logo" />
         </a>
-      </div>
-      <div class="navbar-right">
-        <!-- Space for future menu items -->
       </div>
     </div>
   </nav>
@@ -52,8 +50,8 @@
               <td class="simulator-label"><label for="basket">Valeur moyenne du panier (€)</label></td>
             </tr>
             <tr>
-              <td class="simulator-input"><input type="number" id="tickets" min="1" value="0" required /></td>
-              <td class="simulator-input"><input type="number" id="basket" min="1" value="0" required /></td>
+              <td class="simulator-input"><input type="number" id="tickets" min="1" value="" required /></td>
+              <td class="simulator-input"><input type="number" id="basket" min="1" value="" required /></td>
             </tr>
             <tr>
               <td class="simulator-label" colspan="2"><label for="days">Jours d'ouverture par semaine: <span id="daysValue">0</span></label></td>
@@ -102,146 +100,7 @@
   </div>
 
   <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      const simulatorForm = document.getElementById("simulatorForm");
-      const resultsDiv = document.getElementById("results");
-      const kioskGainElement = document.getElementById("kioskGainValue");
-      const onlineGainElement = document.getElementById("onlineGainValue");
-      
-      // Update the days value display when slider moves
-      const daysSlider = document.getElementById("days");
-      const daysValueDisplay = document.getElementById("daysValue");
-      const ticketsInput = document.getElementById("tickets");
-      const basketInput = document.getElementById("basket");
-      
-      // Function to update slider track
-      function updateSliderTrack() {
-        const percent = (daysSlider.value / daysSlider.max) * 100;
-        daysSlider.style.setProperty('--percent', percent + '%');
-      }
-      
-      
-      // Function to animate a counter from 0 to target value
-      function animateCounter(element, targetValue, prefix = '', suffix = '') {
-        // Remove any previous animation class
-        element.classList.remove('animate-counter');
-        
-        // Get the target value as a number (removing any formatting)
-        const target = parseInt(targetValue.replace(/[^\d]/g, ''));
-        const duration = 1000; // Animation duration in ms
-        const frameDuration = 1000/60; // Assuming 60fps
-        const totalFrames = Math.round(duration / frameDuration);
-        let frame = 0;
-        
-        // Store current value
-        const currentValue = 0;
-        
-        // Trigger reflow to restart animation
-        void element.offsetWidth;
-        element.classList.add('animate-counter');
-        
-        // Start animation
-        const counter = setInterval(() => {
-          frame++;
-          
-          // Calculate progress using easeOutQuad easing function
-          const progress = frame / totalFrames;
-          const easeProgress = -progress * (progress - 2);
-          
-          // Calculate current value based on progress
-          const value = Math.floor(easeProgress * target);
-          
-          // Update the text content
-          element.textContent = `${prefix}${value.toLocaleString('fr-FR')}${suffix}`;
-          
-          // If we've reached the target value, clear the interval
-          if (frame === totalFrames) {
-            clearInterval(counter);
-            element.textContent = `${prefix}${target.toLocaleString('fr-FR')}${suffix}`;
-          }
-        }, frameDuration);
-      }
-      
-      // Function to calculate and display results
-      function calculateResults() {
-        // Get input values
-        const tickets = parseInt(ticketsInput.value) || 0;
-        const basket = parseFloat(basketInput.value) || 0;
-        const daysPerWeek = parseInt(daysSlider.value) || 0;
-        
-        // Monthly tickets
-        const daysPerMonth = daysPerWeek * 4.33;
-        const totalTicketsPerMonth = tickets * daysPerMonth;
-        
-        // Bornes de commande : +5% de commandes en plus, 70% des clients, +25% panier
-        const kioskOrderIncrease = 0.05;
-        const kioskAdoptionRate = 0.70;
-        const kioskBasketIncrease = 0.25;
-        const kioskTickets = totalTicketsPerMonth * (1 + kioskOrderIncrease);
-        let kioskGain = kioskTickets * kioskAdoptionRate * basket * kioskBasketIncrease;
-        
-        // Click & Collect: 18% more orders, 80% of those get 30% basket increase
-        const onlineOrderIncrease = 0.18;
-        const clickCollectTickets = totalTicketsPerMonth * onlineOrderIncrease;
-        const clickCollectBasketIncrease = 0.30;
-        const clickCollectAdoption = 0.80;
-        let onlineGain = clickCollectTickets * basket;
-        onlineGain += clickCollectTickets * basket * clickCollectBasketIncrease * clickCollectAdoption;
 
-        // Calculate total monthly and annual gains
-        const totalMonthlyGain = kioskGain + onlineGain;
-        const totalAnnualGain = totalMonthlyGain * 12;
-        
-        // Round the values
-        const roundedKioskGain = Math.round(kioskGain);
-        const roundedOnlineGain = Math.round(onlineGain);
-        const roundedMonthlyGain = Math.round(totalMonthlyGain);
-        const roundedAnnualGain = Math.round(totalAnnualGain);
-        
-        // Show results if hidden
-        if (resultsDiv.style.display === "none") {
-          resultsDiv.style.opacity = 0;
-          resultsDiv.style.display = "block";
-          setTimeout(() => {
-            resultsDiv.style.transition = "opacity 0.5s ease";
-            resultsDiv.style.opacity = 1;
-            
-            // Animate counters with a slight delay between each
-            setTimeout(() => animateCounter(kioskGainElement, roundedKioskGain.toString(), '+', ' € / mois'), 100);
-            setTimeout(() => animateCounter(onlineGainElement, roundedOnlineGain.toString(), '+', ' € / mois'), 300);
-            setTimeout(() => animateCounter(document.getElementById("totalGainValue"), roundedMonthlyGain.toString(), '+', ' € / mois'), 500);
-            setTimeout(() => animateCounter(document.getElementById("annualEstimate"), roundedAnnualGain.toString(), '(', ' € / an)'), 700);
-          }, 50);
-        } else {
-          // Animate counters with a slight delay between each
-          animateCounter(kioskGainElement, roundedKioskGain.toString(), '+', ' € / mois');
-          animateCounter(onlineGainElement, roundedOnlineGain.toString(), '+', ' € / mois');
-          animateCounter(document.getElementById("totalGainValue"), roundedMonthlyGain.toString(), '+', ' € / mois');
-          animateCounter(document.getElementById("annualEstimate"), roundedAnnualGain.toString(), '(', ' € / an)');
-        }
-      }
-      
-      // Set up event listeners for auto-calculation
-      if (daysSlider && daysValueDisplay) {
-        daysSlider.oninput = function() {
-          daysValueDisplay.textContent = this.value;
-          updateSliderTrack(); // Update the track display
-          calculateResults();
-        }
-      }
-      
-      if (ticketsInput) {
-        ticketsInput.oninput = calculateResults;
-      }
-      
-      if (basketInput) {
-        basketInput.oninput = calculateResults;
-      }
-      
-      // Initial calculation and slider track setup
-      updateSliderTrack();
-      calculateResults();
-    });
   </script>
 </body>
 </html>
